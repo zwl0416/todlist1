@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./toDoList.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <main id="app">
+        <div class="head clear">
+            <p>toDoList</p>
+            <input type="text" placeholder="添加toDo" name="addList" v-model="inputData" @keyup.enter="addData()">
+            <button @click="addData()">提交</button>
+        </div>
+        <div class="list">
+            <h2>
+                正在进行
+                <span name="inProgress" >{{size1}}</span>
+            </h2>
+            <ol>
+                <li v-for="(item,index) in list"><input type="checkbox" @click="addAnother(index)"  v-model="data" :checked="index"> {{item}}<button id="btn" @click="del(key)">-</button></li>
+            </ol>
+            <h2>
+                已经完成
+                <span name="complete">{{size2}}</span>
+            </h2>
+            <ul>
+                <li  v-for="item in secondList" :checked="isComChecked"><input type="checkbox" :checked="index"> {{item}}<button id="btn" @click="del2(key)">-</button></li>
+            </ul>
+
+            <!-- <edit-list></edit-list> -->
+        </div>
+    </main>
+    <script src="./jquery-1.12.4.min.js"></script>
+    <script>
+        // Vue.component('edit-list',{
+
+        // })
+
+
+        let vm = new Vue({
+            props:['inputData','data'],
+            el:'#app',
+            data:{
+                list:[],
+                secondList:[],
+                size1:0,
+                size2:0,
+                // 判断是否选中
+                checked:0,
+            },
+            methods:{
+            
+                addData(){
+                    let val = this.inputData;
+                    this.list.push(val);
+                    console.log(this.list)
+                    this.size1 = this.list.length;
+                    this.inputData = '';
+                },
+                del(key){
+                    this.list.find((item,index)=>{
+                        if( item.key === key){
+                        this.list.splice(index,1);
+                        return true;
+                    }
+                    })
+                },
+                addAnother(index){
+                    this.list.forEach((item,key)=>{
+                        if(key == index){
+                            this.list.splice(key,1);
+                            this.secondList.push(item);
+                        }
+                    })
+                    this.size2 = this.secondList.length;
+                },
+                del2(key){
+                    this.secondList.find((item,index)=>{
+                        if( item.key === key){
+                        this.secondList.splice(index,1);
+                        return true;
+                    }
+                    })
+                    this.size2 = this.secondList.length;
+
+                }
+               
+            }
+        })
+    </script>
+</body>
+</html>
